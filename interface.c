@@ -48,12 +48,16 @@ int ParseParameters (int argc, char** argv, FILE** ptrin)
 	  return FAIL;
   }
   if (argc == 2)
-	//if failed to open file print error message
-	if ( fopen_s(ptrin, argv[1], "r") )
-	{
-		PrintErrorMessage(FAILED_TO_OPEN_FILE);
-		return FAIL;
-	}
+  {
+    //if failed to open file print error message
+    //if ( fopen_s(ptrin, argv[1], "r") )
+    *ptrin = fopen(argv[1], "r");
+    if (*ptrin == NULL)
+    {
+      PrintErrorMessage(FAILED_TO_OPEN_FILE);
+      return FAIL;
+    }
+  }
   return SUCCESS;
 }
 void PrintErrorMessage (error_t error)
@@ -119,16 +123,17 @@ void ProcessStream (FILE* in)
       }
     }
 
-    strcat_s(inputStr, len, tmp);
-	//if string or stream is finished
-	if (EndOfStr(tmp) || feof(in))
-	{
-	  //if expression is empty write expression without any changes
-	  if (IsEmptyOrCommentStr(inputStr))
-	    fwrite(inputStr, sizeof(char), strlen(inputStr), stdout);
-	  //else calculate and print result
-	  else
-	  {
+    //strcat_s(inputStr, len, tmp);
+    strcat(inputStr, tmp);
+	  //if string or stream is finished
+    if (EndOfStr(tmp) || feof(in))
+    {
+      //if expression is empty write expression without any changes
+      if (IsEmptyOrCommentStr(inputStr))
+        fwrite(inputStr, sizeof(char), strlen(inputStr), stdout);
+      //else calculate and print result
+      else
+      {
         char varName;
         /*inputStr - full input string
           exp - current expression (different expressions in string divided by semicolons)*/
