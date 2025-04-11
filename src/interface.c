@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "general.h"
+#include <stdint.h>
 //#include <crtdbg.h>
 //#define _CRTDBG_MAP_ALLOC
 #define SUCCESS 1
@@ -149,7 +150,7 @@ void ProcessStream (FILE* in)
           pSemicolon = strchr(exp, ';');
           //set length of expression
           if (pSemicolon != NULL)
-            expLen = (int)pSemicolon - (int)exp;
+            expLen = (uintptr_t)pSemicolon - (uintptr_t)exp;
           else
             expLen = strlen(exp);
           assert(expLen <= strlen(exp));
@@ -224,12 +225,11 @@ error_t StrIncrease(char** pStr1, size_t* pLen, char** pStr2)
 void PrintExpression(char const* expression)
 {
   int i, len = strlen(expression);
-
-  if (expression[len-1] == '\n') 
-    --len;
-
+  
+  //print expression without end of string characters
   for (i = 0; i < len; ++i)
-  	printf("%c", expression[i]);
+    if (expression[i] != '\r' && expression[i] != '\n')
+  	  printf("%c", expression[i]);
 
   printf(" == ");
 }

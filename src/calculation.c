@@ -673,7 +673,7 @@ error_t ProcessBracketToken(operation_t bracket, stack_t** pStNum, stack_t** pSt
 error_t ProcessVarToken(char const* expression, int* pCurrentIndex, int len, dict_t* dict, int indDict, stack_t** pStNum, char* pVarName)
 {
   int indOfVarInDict;
-  char* pEquationSign;
+  const char* pEquationSign;
   error_t error;
 
   // if current letter is in dictionary push it's value on stack
@@ -693,7 +693,7 @@ error_t ProcessVarToken(char const* expression, int* pCurrentIndex, int len, dic
   SearchForEquationSign(&pEquationSign, &expression[*pCurrentIndex], len);
   if (pEquationSign == NULL)
     return INCORRECT_EXPRESSION;
-  assert((int)pEquationSign - (int)expression < (int)strlen(expression));
+  assert(pEquationSign - expression < strlen(expression));
   //printf("equation sign index: %i\n", (int)pEquationSign - (int)expression);
   *pCurrentIndex = pEquationSign - expression;
 
